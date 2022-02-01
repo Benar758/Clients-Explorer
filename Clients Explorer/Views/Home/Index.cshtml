@@ -1,0 +1,97 @@
+﻿@model List<Clients_Explorer.Models.Client>
+
+@{
+    Layout = null;
+}
+
+<!doctype html>
+<style>
+    #wrapper {
+        margin: 0 auto;
+        width: max-content;
+    }
+
+    table {
+        border: 1px solid grey;
+        border-collapse: collapse;
+    }
+
+    th {
+        border: 1px solid grey;
+        padding: 7px;
+    }
+
+    td {
+        border: 1px solid grey;
+        height: 20px;
+        padding: 7px;
+    }
+
+    .empty-cell {
+        background-color: firebrick;
+    }
+</style>
+<html>
+<head>
+    <title>Clients Explorer</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+    <div id="wrapper">
+        <form method="get" action="~/Client/New">
+            <button id="add-new-client-btn" action="NewClientPartial" type="submit">Добавить нового клиента</button>
+        </form>
+        <table align="center">
+            <caption>
+                <h1>Клиенты</h1>
+            </caption>
+            <tr>
+                <th>Наименование</th>
+                <th>ИНН</th>
+                <th>Тип</th>
+                <th>Дата создания</th>
+                <th>Дата обновления</th>
+                <th>Учредитель</th>
+            </tr>
+            @foreach (var client in Model)
+            {
+                <tr>
+                    <td align="center">
+                        @client.Name
+                    </td>
+                    <td align="center">
+                        @client.TaxesPayerNumber
+                    </td>
+                    <td align="center">
+                        @client.Type
+                    </td>
+                    <td align="center">
+                        @client.CreationDate.ToShortDateString()
+                    </td>
+                    <td align="center">
+                        @client.RefreshDate.ToShortDateString()
+                    </td>
+                    @if (client.Founders != null && client.Founders.Count > 0 && client.Type == "Юр. лицо")
+                    {
+                        <td align="center">
+                            @foreach (var founder in client.Founders)
+                            {
+                                <p>ФИО: @founder.FullName</p>
+                                <p>ИНН: @founder.TaxesPayerNumber</p>
+                                <p>Добавлен: @founder.CreationDate.ToShortDateString()</p>
+                                <p>Обнавлён: @founder.RefreshDate.ToShortDateString()</p>
+                            }
+                        </td>
+                    }
+                    else
+                    {
+                        <td class="empty-cell" align="center"></td>
+                    }
+                </tr>
+            }
+        </table>
+    </div>
+</body>
+</html>

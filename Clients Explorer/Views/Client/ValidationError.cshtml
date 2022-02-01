@@ -1,0 +1,60 @@
+﻿@model Clients_Explorer.ViewModels.ClientsViewModel
+
+@{
+    Layout = null;
+    List<string> options = new List<string>() { "ИП", "Юр. лицо" };
+}
+
+<style>
+    #new-client-form{
+        width: min-content;
+        margin: 0 auto;
+    }
+
+    #add-founders-par{
+        cursor: pointer;
+    }
+    
+    #add-founders-par:hover{
+        color: Highlight;
+    }
+</style>
+
+@using (Html.BeginForm("AddNewClient", "Client", FormMethod.Post))
+{
+<div id="new-client-form">
+    @Html.LabelFor(m => m.Client.Name)<br />
+    @Html.TextBoxFor(m => m.Client.Name)
+    <br />
+    @Html.LabelFor(m => m.Client.Type)<br />
+    @Html.DropDownListFor(m => m.Client.Type, new SelectList(options))
+    <br />
+    @Html.LabelFor(m => m.Client.TaxesPayerNumber)<br />
+    @Html.TextBoxFor(m => m.Client.TaxesPayerNumber)
+    <br />
+
+    <p id="add-founders-par">Добавить подрядчиков (для Юр. лиц)</p>
+    <div id="add-founders-subform" hidden="hidden">
+        @Html.LabelFor(m => m.Founder.FullName)
+        @Html.TextBoxFor(m => m.Founder.FullName)<br />
+        @Html.LabelFor(m => m.Founder.TaxesPayerNumber)
+        @Html.TextBoxFor(m => m.Founder.TaxesPayerNumber)
+    </div>
+    
+    <input id="submit-btn" type="submit" />
+</div>
+}
+
+<script type="text/javascript">
+    alert("Ошибка валидации! Убедитесь, что все поля заполнены верно");
+
+    var addFoundersPar = document.getElementById('add-founders-par');
+    var addFoundersSubform = document.getElementById('add-founders-subform');
+
+    addFoundersPar.onclick = function () {
+        var answer = confirm("Добавляете Юр. лицо? В противном случае подрядчики не будут отображены в таблице");
+        if (!answer) return;
+        addFoundersPar.hidden = true;
+        addFoundersSubform.hidden = false;       
+    }
+</script>
